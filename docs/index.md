@@ -202,4 +202,3 @@ Explore the complete guides:
 
 > [!TIP]
 > Press `⌘K` (macOS) or `Ctrl+K` (Linux/Windows) at any time to open the Command Palette and search across all documentation pages.
-

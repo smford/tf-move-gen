@@ -66,11 +66,13 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 
 	if serveHealthz != "" {
 		mux := http.NewServeMux()
-		mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		healthHandler := func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
 			_, _ = w.Write([]byte(`{"status":"ok","app":"tf-move-gen"}`))
-		})
+		}
+		mux.HandleFunc("/healthz", healthHandler)
+		mux.HandleFunc("/", healthHandler)
 		fmt.Fprintf(stdout, "tf-move-gen health check server listening on %s\n", serveHealthz)
 		server := &http.Server{
 			Addr:    serveHealthz,
