@@ -12,6 +12,12 @@ import (
 	"github.com/smford/tf-move-gen/internal/tfplan"
 )
 
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
 func main() {
 	exitCode := run(os.Args[1:], os.Stdin, os.Stdout, os.Stderr)
 	os.Exit(exitCode)
@@ -29,6 +35,7 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 		stateMvCommands       bool
 		failOnUnmatchedDelete bool
 		serveHealthz          string
+		showVersion           bool
 	)
 
 	fs.Float64Var(&minConfidence, "min-confidence", matcher.DefaultMinConfidence, "Minimum similarity threshold between 0.0 and 1.0")
@@ -38,6 +45,8 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 	fs.BoolVar(&stateMvCommands, "state-mv-commands", false, "Output legacy terraform state mv shell commands instead of HCL moved blocks")
 	fs.BoolVar(&failOnUnmatchedDelete, "fail-on-unmatched-delete", false, "Exit with code 2 if any destructive resource deletion remains unmatched")
 	fs.StringVar(&serveHealthz, "serve-healthz", "", "Start an HTTP health check daemon (e.g. :8080) for container DAST testing")
+	fs.BoolVar(&showVersion, "version", false, "Print version information and exit")
+	fs.BoolVar(&showVersion, "v", false, "Print version information and exit (shorthand)")
 
 	fs.Usage = func() {
 		fmt.Fprintf(stderr, "Usage: tf-move-gen [flags] [plan.json]\n\n")
@@ -48,6 +57,11 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 
 	if err := fs.Parse(args); err != nil {
 		return 1
+	}
+
+	if showVersion {
+		fmt.Fprintf(stdout, "tf-move-gen %s (commit: %s, built at: %s)\n", version, commit, date)
+		return 0
 	}
 
 	if serveHealthz != "" {

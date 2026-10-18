@@ -172,3 +172,18 @@ func TestCLIHealthz(t *testing.T) {
 		t.Errorf("expected status 200, got %d", resp.StatusCode)
 	}
 }
+
+func TestCLIVersion(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	code := run([]string{"--version"}, nil, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("expected exit code 0, got %d", code)
+	}
+
+	out := stdout.String()
+	if !strings.Contains(out, "tf-move-gen") || !strings.Contains(out, "dev") {
+		t.Errorf("unexpected version output: %s", out)
+	}
+}
