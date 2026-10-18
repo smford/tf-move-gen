@@ -112,29 +112,71 @@ No changes. Your infrastructure matches the configuration.
 
 ## Installation
 
-### Homebrew (macOS & Linux)
+`tf-move-gen` is compiled as a standalone static binary with zero runtime dependencies. Choose your preferred installation method:
+
+### 1. Homebrew (macOS & Linux) — Recommended
+
+```bash
+brew install smford/tap/tf-move-gen
+```
+
+Or add the tap manually:
 
 ```bash
 brew tap smford/homebrew-tap
 brew install tf-move-gen
 ```
 
-### Go Install (Go 1.23+)
+### 2. Shell Installer Script (macOS & Linux)
+
+Install the latest release directly to `/usr/local/bin` (or `~/.local/bin`):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/smford/tf-move-gen/main/scripts/install.sh | bash
+```
+
+### 3. Go Install (Go 1.23+)
 
 ```bash
 go install github.com/smford/tf-move-gen/cmd/tf-move-gen@latest
 ```
 
-### Docker
+Ensure `$GOPATH/bin` (or `$HOME/go/bin`) is included in your `$PATH`.
+
+### 4. Docker Container
+
+Run directly without installing anything on your host machine:
 
 ```bash
 docker pull ghcr.io/smford/tf-move-gen:latest
-docker run --rm -i ghcr.io/smford/tf-move-gen:latest < plan.json
+
+# Pipe plan directly into Docker
+terraform show -json tfplan | docker run --rm -i ghcr.io/smford/tf-move-gen:latest --explain
 ```
 
-### Download Precompiled Binaries
+### 5. Download Precompiled Binaries
 
-Download precompiled static binaries for macOS, Linux, and Windows from [GitHub Releases](https://github.com/smford/tf-move-gen/releases).
+Download precompiled static archives from the [Latest GitHub Release](https://github.com/smford/tf-move-gen/releases/latest):
+
+| Operating System | Architecture | Download Link |
+| :--- | :--- | :--- |
+| **macOS** | Apple Silicon (M1/M2/M3/M4) | [`tf-move-gen_0.1.0_darwin_arm64.tar.gz`](https://github.com/smford/tf-move-gen/releases/latest/download/tf-move-gen_0.1.0_darwin_arm64.tar.gz) |
+| **macOS** | Intel (x86_64) | [`tf-move-gen_0.1.0_darwin_amd64.tar.gz`](https://github.com/smford/tf-move-gen/releases/latest/download/tf-move-gen_0.1.0_darwin_amd64.tar.gz) |
+| **Linux** | ARM64 (aarch64) | [`tf-move-gen_0.1.0_linux_arm64.tar.gz`](https://github.com/smford/tf-move-gen/releases/latest/download/tf-move-gen_0.1.0_linux_arm64.tar.gz) |
+| **Linux** | x86_64 (amd64) | [`tf-move-gen_0.1.0_linux_amd64.tar.gz`](https://github.com/smford/tf-move-gen/releases/latest/download/tf-move-gen_0.1.0_linux_amd64.tar.gz) |
+| **Windows** | x86_64 (amd64) | [`tf-move-gen_0.1.0_windows_amd64.zip`](https://github.com/smford/tf-move-gen/releases/latest/download/tf-move-gen_0.1.0_windows_amd64.zip) |
+
+### 6. Build from Source
+
+```bash
+git clone https://github.com/smford/tf-move-gen.git
+cd tf-move-gen
+make build
+# Binary is located at bin/tf-move-gen
+./bin/tf-move-gen --version
+```
+
+See the [Interactive Installation Guide](https://smford.github.io/tf-move-gen/#installation.md) for complete details.
 
 ---
 

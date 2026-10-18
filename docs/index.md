@@ -141,10 +141,57 @@ Zero downtime. Zero manual typing.
 
 ---
 
+## Installation
+
+`tf-move-gen` is distributed as a zero-dependency standalone binary for macOS, Linux, and Windows.
+
+### Homebrew (macOS & Linux)
+
+```bash
+brew install smford/tap/tf-move-gen
+```
+
+Or tap and install:
+
+```bash
+brew tap smford/homebrew-tap
+brew install tf-move-gen
+```
+
+### Install Script (macOS & Linux)
+
+Install the latest binary to `/usr/local/bin` using `curl`:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/smford/tf-move-gen/main/scripts/install.sh | bash
+```
+
+### Go Install (Go 1.23+)
+
+```bash
+go install github.com/smford/tf-move-gen/cmd/tf-move-gen@latest
+```
+
+### Docker Container Image
+
+```bash
+docker pull ghcr.io/smford/tf-move-gen:latest
+terraform show -json tfplan | docker run --rm -i ghcr.io/smford/tf-move-gen:latest --explain
+```
+
+### Direct Binary Download
+
+Precompiled static binaries for macOS (Intel & Apple Silicon), Linux (x86_64 & ARM64), and Windows are available from [GitHub Releases](https://github.com/smford/tf-move-gen/releases).
+
+For more detailed setup options, see the [Full Installation Guide](installation.md).
+
+---
+
 ## Documentation Index
 
 Explore the complete guides:
 
+- [Installation Guide](installation.md) — Comprehensive install instructions across package managers, curl, Docker, and source.
 - [Getting Started Guide](getting-started.md) — Hands-on step-by-step refactoring tutorial.
 - [System Architecture](architecture.md) — Internals of the parser, matcher, and generator pipelines.
 - [Matching Algorithm & Heuristics](matching-algorithm.md) — Deep dive into the weighted similarity score and bipartite assignment.
@@ -155,3 +202,4 @@ Explore the complete guides:
 
 > [!TIP]
 > Press `⌘K` (macOS) or `Ctrl+K` (Linux/Windows) at any time to open the Command Palette and search across all documentation pages.
+

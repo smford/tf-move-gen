@@ -12,12 +12,23 @@ This guide walks you through a hands-on refactoring scenario, showing you how to
 
 ### Installation
 
-```bash
-# Install via Go
-go install github.com/smford/tf-move-gen/cmd/tf-move-gen@latest
+Choose your preferred installation method (see the [Full Installation Guide](installation.md) for more details):
 
-# Verify installation
-tf-move-gen --help
+```bash
+# Option 1: Via Homebrew (macOS & Linux)
+brew install smford/tap/tf-move-gen
+
+# Option 2: Via automated shell installer
+curl -fsSL https://raw.githubusercontent.com/smford/tf-move-gen/main/scripts/install.sh | bash
+
+# Option 3: Via Go (Go 1.23+)
+go install github.com/smford/tf-move-gen/cmd/tf-move-gen@latest
+```
+
+Verify that the CLI is ready:
+
+```bash
+tf-move-gen --version
 ```
 
 ---
