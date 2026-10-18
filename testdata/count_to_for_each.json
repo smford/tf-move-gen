@@ -1,0 +1,126 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.8.5",
+  "resource_changes": [
+    {
+      "address": "aws_subnet.public[0]",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "public",
+      "index": 0,
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["delete"],
+        "before": {
+          "cidr_block": "10.0.1.0/24",
+          "availability_zone": "eu-west-1a",
+          "vpc_id": "vpc-0123456789abcdef0",
+          "map_public_ip_on_launch": true
+        },
+        "after": null
+      }
+    },
+    {
+      "address": "aws_subnet.public[1]",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "public",
+      "index": 1,
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["delete"],
+        "before": {
+          "cidr_block": "10.0.2.0/24",
+          "availability_zone": "eu-west-1b",
+          "vpc_id": "vpc-0123456789abcdef0",
+          "map_public_ip_on_launch": true
+        },
+        "after": null
+      }
+    },
+    {
+      "address": "aws_subnet.public[2]",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "public",
+      "index": 2,
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["delete"],
+        "before": {
+          "cidr_block": "10.0.3.0/24",
+          "availability_zone": "eu-west-1c",
+          "vpc_id": "vpc-0123456789abcdef0",
+          "map_public_ip_on_launch": true
+        },
+        "after": null
+      }
+    },
+    {
+      "address": "aws_subnet.public[\"10.0.2.0/24\"]",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "public",
+      "index": "10.0.2.0/24",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "cidr_block": "10.0.2.0/24",
+          "availability_zone": "eu-west-1b",
+          "vpc_id": "vpc-0123456789abcdef0",
+          "map_public_ip_on_launch": true
+        },
+        "after_unknown": {
+          "id": true,
+          "arn": true
+        }
+      }
+    },
+    {
+      "address": "aws_subnet.public[\"10.0.3.0/24\"]",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "public",
+      "index": "10.0.3.0/24",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "cidr_block": "10.0.3.0/24",
+          "availability_zone": "eu-west-1c",
+          "vpc_id": "vpc-0123456789abcdef0",
+          "map_public_ip_on_launch": true
+        },
+        "after_unknown": {
+          "id": true,
+          "arn": true
+        }
+      }
+    },
+    {
+      "address": "aws_subnet.public[\"10.0.1.0/24\"]",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "public",
+      "index": "10.0.1.0/24",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "cidr_block": "10.0.1.0/24",
+          "availability_zone": "eu-west-1a",
+          "vpc_id": "vpc-0123456789abcdef0",
+          "map_public_ip_on_launch": true
+        },
+        "after_unknown": {
+          "id": true,
+          "arn": true
+        }
+      }
+    }
+  ]
+}

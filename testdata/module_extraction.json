@@ -1,0 +1,106 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.8.5",
+  "resource_changes": [
+    {
+      "address": "aws_s3_bucket.media",
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "name": "media",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["delete"],
+        "before": {
+          "bucket": "acme-corp-media-assets",
+          "acl": "private",
+          "force_destroy": false,
+          "tags": {
+            "Environment": "production",
+            "Project": "media-pipeline"
+          }
+        },
+        "after": null
+      }
+    },
+    {
+      "address": "module.storage.aws_s3_bucket.media",
+      "module_address": "module.storage",
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "name": "media",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "bucket": "acme-corp-media-assets",
+          "acl": "private",
+          "force_destroy": false,
+          "tags": {
+            "Environment": "production",
+            "Project": "media-pipeline"
+          }
+        },
+        "after_unknown": {
+          "id": true,
+          "arn": true,
+          "bucket_domain_name": true,
+          "tags_all": true
+        }
+      }
+    },
+    {
+      "address": "aws_iam_role.worker",
+      "mode": "managed",
+      "type": "aws_iam_role",
+      "name": "worker",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["delete"],
+        "before": {
+          "name": "acme-worker-role",
+          "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[]}",
+          "description": "Worker IAM role"
+        },
+        "after": null
+      }
+    },
+    {
+      "address": "module.compute.aws_iam_role.worker",
+      "module_address": "module.compute",
+      "mode": "managed",
+      "type": "aws_iam_role",
+      "name": "worker",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "acme-worker-role",
+          "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[]}",
+          "description": "Worker IAM role"
+        },
+        "after_unknown": {
+          "id": true,
+          "arn": true,
+          "unique_id": true
+        }
+      }
+    },
+    {
+      "address": "aws_security_group.obsolete_bastion",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "obsolete_bastion",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["delete"],
+        "before": {
+          "name": "bastion-sg",
+          "description": "Old bastion security group"
+        },
+        "after": null
+      }
+    }
+  ]
+}
