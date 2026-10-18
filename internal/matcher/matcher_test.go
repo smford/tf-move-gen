@@ -111,10 +111,10 @@ func TestSubnetCountToForEachMatching(t *testing.T) {
 			Change: tfplan.Change{
 				Actions: []string{"delete"},
 				Before: map[string]any{
-					"cidr_block":                  cidrs[i],
-					"availability_zone":           azs[i],
-					"vpc_id":                      "vpc-12345",
-					"map_public_ip_on_launch":     true,
+					"cidr_block":              cidrs[i],
+					"availability_zone":       azs[i],
+					"vpc_id":                  "vpc-12345",
+					"map_public_ip_on_launch": true,
 					"enable_resource_name_dns_a_record_on_launch": false,
 				},
 			},
@@ -135,10 +135,10 @@ func TestSubnetCountToForEachMatching(t *testing.T) {
 			Change: tfplan.Change{
 				Actions: []string{"create"},
 				After: map[string]any{
-					"cidr_block":                  cidr,
-					"availability_zone":           azs[idx],
-					"vpc_id":                      "vpc-12345",
-					"map_public_ip_on_launch":     true,
+					"cidr_block":              cidr,
+					"availability_zone":       azs[idx],
+					"vpc_id":                  "vpc-12345",
+					"map_public_ip_on_launch": true,
 					"enable_resource_name_dns_a_record_on_launch": false,
 				},
 				AfterUnknown: map[string]any{
@@ -286,5 +286,45 @@ func TestTypeIsolation(t *testing.T) {
 
 	if len(res.Matches) != 0 {
 		t.Errorf("expected 0 matches between different resource types, got %d", len(res.Matches))
+	}
+}
+
+func TestSliceJaccardComparison(t *testing.T) {
+	del := tfplan.ResourceChange{
+		Address:      "aws_security_group.app",
+		Mode:         "managed",
+		Type:         "aws_security_group",
+		Name:         "app",
+		ProviderName: "registry.terraform.io/hashicorp/aws",
+		Change: tfplan.Change{
+			Actions: []string{"delete"},
+			Before: map[string]any{
+				"name":            "app-sg",
+				"security_groups": []any{"sg-1", "sg-2", "sg-3"},
+			},
+		},
+	}
+
+	create := tfplan.ResourceChange{
+		Address:      "module.security.aws_security_group.app",
+		Mode:         "managed",
+		Type:         "aws_security_group",
+		Name:         "app",
+		ProviderName: "registry.terraform.io/hashicorp/aws",
+		Change: tfplan.Change{
+			Actions: []string{"create"},
+			After: map[string]any{
+				"name":            "app-sg",
+				"security_groups": []any{"sg-3", "sg-1", "sg-2"},
+			},
+		},
+	}
+
+	score, matchedAttrs := ComputeSimilarity(&del, &create)
+	if score < 0.99 {
+		t.Errorf("expected score 1.0 for reordered sets, got %f", score)
+	}
+	if len(matchedAttrs) < 2 {
+		t.Errorf("expected at least 2 matched attributes, got %v", matchedAttrs)
 	}
 }

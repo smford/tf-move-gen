@@ -2,10 +2,12 @@ package main
 
 import (
 	"bytes"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestCLIModuleExtractionFile(t *testing.T) {
@@ -137,5 +139,36 @@ func TestCLIOutFileAndAppend(t *testing.T) {
 	}
 	if !strings.Contains(string(content2), "aws_subnet.public[0]") {
 		t.Errorf("outFile missing appended subnet match")
+	}
+}
+
+func TestCLIHealthz(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	// Run health check server in goroutine
+	addr := "127.0.0.1:28394"
+	go func() {
+		_ = run([]string{"--serve-healthz", addr}, nil, &stdout, &stderr)
+	}()
+
+	// Query /healthz
+	client := &http.Client{Timeout: 2 * time.Second}
+	var resp *http.Response
+	var err error
+	for i := 0; i < 20; i++ {
+		time.Sleep(50 * time.Millisecond)
+		resp, err = client.Get("http://" + addr + "/healthz")
+		if err == nil {
+			break
+		}
+	}
+	if err != nil {
+		t.Fatalf("failed to connect to /healthz: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		t.Errorf("expected status 200, got %d", resp.StatusCode)
 	}
 }

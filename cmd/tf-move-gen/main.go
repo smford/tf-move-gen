@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 
 	"github.com/smford/tf-move-gen/internal/generator"
@@ -21,12 +22,13 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 	fs.SetOutput(stderr)
 
 	var (
-		minConfidence          float64
-		outFile                string
-		appendOut              bool
-		explain                bool
-		stateMvCommands        bool
+		minConfidence         float64
+		outFile               string
+		appendOut             bool
+		explain               bool
+		stateMvCommands       bool
 		failOnUnmatchedDelete bool
+		serveHealthz          string
 	)
 
 	fs.Float64Var(&minConfidence, "min-confidence", matcher.DefaultMinConfidence, "Minimum similarity threshold between 0.0 and 1.0")
@@ -35,6 +37,7 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 	fs.BoolVar(&explain, "explain", false, "Include comments above each moved block showing confidence score and warn on unmatched deletes")
 	fs.BoolVar(&stateMvCommands, "state-mv-commands", false, "Output legacy terraform state mv shell commands instead of HCL moved blocks")
 	fs.BoolVar(&failOnUnmatchedDelete, "fail-on-unmatched-delete", false, "Exit with code 2 if any destructive resource deletion remains unmatched")
+	fs.StringVar(&serveHealthz, "serve-healthz", "", "Start an HTTP health check daemon (e.g. :8080) for container DAST testing")
 
 	fs.Usage = func() {
 		fmt.Fprintf(stderr, "Usage: tf-move-gen [flags] [plan.json]\n\n")
@@ -45,6 +48,25 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 
 	if err := fs.Parse(args); err != nil {
 		return 1
+	}
+
+	if serveHealthz != "" {
+		mux := http.NewServeMux()
+		mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			_, _ = w.Write([]byte(`{"status":"ok","app":"tf-move-gen"}`))
+		})
+		fmt.Fprintf(stdout, "tf-move-gen health check server listening on %s\n", serveHealthz)
+		server := &http.Server{
+			Addr:    serveHealthz,
+			Handler: mux,
+		}
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			fmt.Fprintf(stderr, "Health check server error: %v\n", err)
+			return 1
+		}
+		return 0
 	}
 
 	positional := fs.Args()
